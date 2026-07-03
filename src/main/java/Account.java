@@ -3,7 +3,7 @@ import java.sql.*;
 public class Account {
     Connection connection = null;
     PreparedStatement ps = null;
-    public void createAccount(String name,String accountNumber, String password){
+    public void createAccount(String name,String accountNumber, int balance){
         try{
             connection = JDBCutil.getConnection();
 
@@ -12,7 +12,7 @@ public class Account {
             ps = connection.prepareStatement(query);
             ps.setString(1,name);
             ps.setString(2,accountNumber);
-            ps.setString(3,password);
+            ps.setInt(3,balance);
 
             int rowsAffected = ps.executeUpdate();
 
@@ -173,6 +173,13 @@ public class Account {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void transfer(String senderAccountNumber, String receiverAccountNumber, int amount){
+        withdraw(senderAccountNumber,amount);
+        System.out.println("Withdraw done");
+        deposit(receiverAccountNumber,amount);
+        System.out.println("Deposit done");
     }
 }
 
